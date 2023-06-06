@@ -45,7 +45,7 @@
             padding: 4px;
         }
         #wallpaper-div{
-            background-image: url('./pexels-roman-odintsov-6898861.jpg');
+            background-image: url('./signup/pexels-roman-odintsov-6898861.jpg');
             background-size: cover;
         }
     </style>
@@ -55,16 +55,18 @@
         <div id="form-div">
             <form>
                 <h1>Sign Up</h1>
-                <input type="text" placeholder="Enter your name">
-                <input type="text" placeholder="Enter Email">
-                <input type="tel" placeholder="Enter phone number">
-                <input type="email" placeholder="Enter email">
-                <input type="password" placeholder="Enter password">
+                <input type="text" name="name" placeholder="Enter your name">
+                <input type="email" name="email" placeholder="Enter Email">
+                <input type="tel" name="phone" placeholder="Enter Phone number">
+                <input type="password" name="password" placeholder="Enter Password">
+                <input type="submit" value="Submit" style="background-color: rgb(134, 134, 243); color: white;">
             </form>
         </div>
         <div id="wallpaper-div">
 
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./signup/signup.js"></script>
 </body>
 </html>
