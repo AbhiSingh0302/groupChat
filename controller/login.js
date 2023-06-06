@@ -1,10 +1,14 @@
 const path = require('path');
 const Signup = require('../models/signup');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const genWebTokens = (id) => {
+    return jwt.sign({userId: id}, process.env.JWT_KEY);
+}
 
 exports.login = async (req,res)=>{
     try {
-        console.log(req.body);
         const {email,password} = req.body;
         if(req.body){
             const user = await Signup.findOne({
@@ -16,7 +20,8 @@ exports.login = async (req,res)=>{
                 const bcryptToken = await bcrypt.compare(password, user.password)
                 if(bcryptToken){
                     res.status(200).json({
-                        "message": "User successfully logged in"
+                        "message": "User successfully logged in",
+                        "token": genWebTokens(user.id)
                     })
                 }else{
                     throw new Error('user not found');
