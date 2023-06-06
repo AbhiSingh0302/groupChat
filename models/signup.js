@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../utils/database');
 
-const userSignup = sequelize.define(process.env.DB_NAME, {
+const userSignup = sequelize.define(process.env.SIGNUP_TABLE, {
     username: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false
@@ -17,7 +17,8 @@ const userSignup = sequelize.define(process.env.DB_NAME, {
         allowNull: false
     },
     phone: {
-        type: Sequelize.DataTypes.BOOLEAN
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
     }
  });
 

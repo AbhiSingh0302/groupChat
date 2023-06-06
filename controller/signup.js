@@ -2,14 +2,25 @@ const path = require('path');
 const Signup = require('../models/signup');
 
 exports.signupreq = async (req,res)=>{
-    // res.json(req.body.headers);
-    // try {
-    //     if(req.body.headers){
-    //         await Signup.
-    //     }
-    // } catch (error) {
-        
-    // }
+    try {
+        console.log(req.body);
+        const {username,email,phone,password} = req.body;
+        if(req.body){
+            const user = await Signup.create({username,email,phone,password});
+            res.status(200).json({
+                'success': true,
+                user
+            })
+        }else{
+            throw new Error('Not Found!!');
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+            'success': false,
+            error
+        })
+    }
 }
 
 exports.signuppage = async (req,res) => {
