@@ -5,6 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const signupRouter = require('./routes/signup');
+const loginRouter = require('./routes/login');
 const sequelize = require('./utils/database');
 
 const app = express();
@@ -18,6 +19,8 @@ app.use(cors({
 app.use(express.static(__dirname+'/public'));
 
 app.use(signupRouter);
+
+app.use(loginRouter);
 
 sequelize.sync()
 .then(() => {

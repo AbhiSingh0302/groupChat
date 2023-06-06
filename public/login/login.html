@@ -34,7 +34,10 @@
             margin: 0rem auto;
         }
         #form-div{
-            background-color: aliceblue;
+            background-image: url('../signup/pexels-scott-webb-1903747.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 2rem;
         }
         input{
             display: block;
@@ -46,7 +49,7 @@
             font-size: 20px;
         }
         #wallpaper-div{
-            background-image: url('./signup/pexels-roman-odintsov-6898861.jpg');
+            background-image: url('../signup/pexels-samer-daboul-7871387.jpg');
             background-size: cover;
         }
     </style>
@@ -55,14 +58,12 @@
     <div id="flex">
         <div id="form-div">
             <form>
-                <h1>Sign Up</h1>
-                <input type="text" name="username" placeholder="Enter your name">
+                <h1>Login</h1>
                 <input type="email" name="email" placeholder="Enter Email">
-                <input type="tel" name="phone" placeholder="Enter Phone number">
                 <input type="password" name="password" placeholder="Enter Password">
                 <input type="submit" value="Submit" style="background-color: rgb(134, 134, 243); color: white;">
                 <h3></h3>
-                <h3>Already a user? <a href="/login/login.html">Login</a></h3>
+                <h3>Create New Account? <a href="/">Signup</a></h3>
             </form>
         </div>
         <div id="wallpaper-div">
@@ -70,6 +71,6 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="./signup/signup.js"></script>
+    <script src="./login.js"></script>
 </body>
 </html>
