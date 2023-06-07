@@ -16,18 +16,30 @@ form.addEventListener('submit',async (e) => {
         log.style.color = 'green';
         setTimeout(() => {
             log.innerHTML = "";
+            axios.get('/chat/all-chats',{
+                headers:{
+                    'Authorization': localStorage.getItem('authorization')
+                }
+            })
+            .then((data)=>{
+                // console.log("data: ",data.data);
+                const chats = data.data;
+                let chatArr = [];
+                let len = 0;
+                if(chats.length >= 10){
+                    len = chats.length;
+                }else{
+                    len = 10;
+                }
+                for(let i=len-10; i<=chats.length-1; i++){
+                    chatArr.push(chats[i]);
+                }
+                localStorage.setItem("chats",JSON.stringify(chatArr));
+            })
+            .catch((err) => {
+                console.log(err);
+            })
             window.location.replace('/chat')
-            // axios.get('/chat',{
-            //     headers:{
-            //         'Authorization': localStorage.getItem('authorization')
-            //     }
-            // })
-            // .then((data)=>{
-            //     console.log(data);
-            // })
-            // .catch((err) => {
-            //     console.log(err);
-            // })
         }, 2000)
     }else{
         log.innerHTML = "Not exist";

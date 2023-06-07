@@ -22,7 +22,7 @@ exports.encrypt = async (req,res,next) => {
 
 
 exports.authorization = (req,res,next) => {
-    console.log(req.headers.authorization);
+    console.log(req.headers);
     const token = req.headers.authorization;
     // console.log(req.headers.token);
     // console.log(token);

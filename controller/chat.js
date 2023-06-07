@@ -20,7 +20,7 @@ exports.userChat = async (req,res) => {
         console.log("params",req.params);
         const user = await Signup.findOne({
             where:{
-                id: req.params.id
+                username: req.params.username
             }
         })
         if(user){
