@@ -11,6 +11,7 @@ form.addEventListener('submit',async (e) => {
     if(userData){
         console.log(userData.data);
         localStorage.setItem('authorization', userData.data.token);
+        localStorage.setItem('user', userData.data.user);
         log.innerHTML = "Successfully Login";
         log.style.color = 'green';
         setTimeout(() => {

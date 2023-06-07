@@ -21,9 +21,20 @@
             padding: 1rem;
             text-align: center;
         }
+        form{
+            text-align: center;
+            margin: 1rem;
+        }
+        input[type="text"]{
+            width: 30%;
+        }
+        input{
+            font-size: 18px;
+            padding: 5px;
+        }
         ul{
             width: 70%;
-            margin: 2rem auto;
+            margin: 0 auto;
             background-color: aliceblue;
             padding: 1rem;
             list-style: none;
@@ -39,6 +50,10 @@
     <header>
         <h1>Chat App</h1>
     </header>
+    <form>
+        <input type="text" name="text" id="texting" placeholder="chat with your friends..." required>
+        <input type="submit" value="Send">
+    </form>
     <ul>
     </ul>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

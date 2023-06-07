@@ -4,10 +4,14 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const cors = require('cors');
 
-const signupRouter = require('./routes/signup');
 const loginRouter = require('./routes/login');
-const chatRouter = require('./routes/chat');
 const sequelize = require('./utils/database');
+const chatRouter = require('./routes/chat');
+const signupRouter = require('./routes/signup');
+
+const User = require('./models/signup');
+const Chat = require('./models/chat');
+Chat.belongsTo(User);
 
 const app = express();
 
@@ -19,11 +23,9 @@ app.use(cors({
 
 app.use(express.static(__dirname+'/public'));
 
-app.use(signupRouter);
-
-app.use(loginRouter);
-
 app.use(chatRouter);
+app.use(loginRouter);
+app.use(signupRouter);
 
 sequelize.sync()
 .then(() => {

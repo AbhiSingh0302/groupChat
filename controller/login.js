@@ -21,7 +21,8 @@ exports.login = async (req,res)=>{
                 if(bcryptToken){
                     res.status(200).json({
                         "message": "User successfully logged in",
-                        "token": genWebTokens(user.id)
+                        "token": genWebTokens(user.id),
+                        "user": user.username
                     })
                 }else{
                     throw new Error('user not found');
