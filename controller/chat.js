@@ -30,9 +30,7 @@ exports.userChat = async (req,res) => {
                 'signupId': user.id
             })
             if(chat){
-                res.status(201).json({
-                    'success': true
-                })
+                res.status(201).json(chat)
             }else{
                 res.status(404).json({
                     'success': false

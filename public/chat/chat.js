@@ -9,10 +9,11 @@ const getUsers = (data) => {
         if(d.username == User){
             userId = d.id;
         }
-        let li = document.createElement('li');
-        li.innerHTML = d.username;
-        ul.append(li);
+        // let li = document.createElement('li');
+        // li.innerHTML = d.username;
+        // ul.append(li);
     }
+    allChats();
 }
 
 window.addEventListener('DOMContentLoaded',async () => {
@@ -29,7 +30,7 @@ window.addEventListener('DOMContentLoaded',async () => {
         console.log('not available');
     }
 } catch (error) {
-        
+    console.log('not available');
 }
 })
 
@@ -37,21 +38,26 @@ form.addEventListener('submit',(e) => {
     e.preventDefault();
     console.log(userId);
     const allUsers = document.querySelectorAll('li');
-    for(let user of allUsers){
-        if(user.innerHTML == User){
+    // for(let user of allUsers){
+    //     console.log('li is ',user.innerHTML);
+    //     if(user.innerHTML == User){
             axios.post('/chat/text/'+userId,form,{
                 headers:{
                     'Content-Type': 'application/json'
                 }
-            }).then(() => {
+            }).then((chat) => {
+                // let li = document.createElement('li');
+                // li.innerHTML = chat.data.username+" - "+chat.data.text;
+                // ul.append(li);
                 allChats();
             })
-        }
-    }
+        // }
+    // }
     text.value = "";
 })
 
 function allChats(){
+    ul.innerHTML = "";
     axios.get('/chat/all-chats')
     .then((data) => {
         // console.log(data.data);
