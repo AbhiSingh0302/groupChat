@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const signupRouter = require('./routes/signup');
 const loginRouter = require('./routes/login');
+const chatRouter = require('./routes/chat');
 const sequelize = require('./utils/database');
 
 const app = express();
@@ -21,6 +22,8 @@ app.use(express.static(__dirname+'/public'));
 app.use(signupRouter);
 
 app.use(loginRouter);
+
+app.use(chatRouter);
 
 sequelize.sync()
 .then(() => {

@@ -1,6 +1,5 @@
 const form = document.querySelector('form');
 const log = document.querySelector('h3');
-console.log('signup.js');
 form.addEventListener('submit',async (e) => {
     try {
     e.preventDefault();
@@ -10,10 +9,24 @@ form.addEventListener('submit',async (e) => {
         }
     })
     if(userData){
+        console.log(userData.data);
+        localStorage.setItem('authorization', userData.data.token);
         log.innerHTML = "Successfully Login";
         log.style.color = 'green';
         setTimeout(() => {
             log.innerHTML = "";
+            window.location.replace('/chat')
+            // axios.get('/chat',{
+            //     headers:{
+            //         'Authorization': localStorage.getItem('authorization')
+            //     }
+            // })
+            // .then((data)=>{
+            //     console.log(data);
+            // })
+            // .catch((err) => {
+            //     console.log(err);
+            // })
         }, 2000)
     }else{
         log.innerHTML = "Not exist";
