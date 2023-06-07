@@ -71,3 +71,7 @@ function allChats(){
         alert('something not right');
     })
 }
+
+// setInterval(()=>{
+//     allChats();
+// },1000)
