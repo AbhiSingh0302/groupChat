@@ -21,18 +21,24 @@
             padding: 1rem;
             text-align: center;
         }
+        .flex{
+            display: flex;
+            width: 70%;
+            margin: 0 auto;
+            justify-content: space-between;
+        }
         form{
             text-align: center;
             margin: 1rem;
-        }
-        input[type="text"]{
-            width: 30%;
         }
         input{
             font-size: 18px;
             padding: 5px;
         }
         ul{
+            list-style: none;
+        }
+        #chat-ul{
             width: 70%;
             margin: 0 auto;
             background-color: aliceblue;
@@ -41,10 +47,16 @@
             height: 20rem;
             overflow: auto;
         }
-        li{
+        #chat-ul li{
             background-color: #b1f5f5;
             padding: 5px;
             margin: 5px 0;
+        }
+        button{
+            padding: 5px;
+        }
+        h2{
+            text-align: center;
         }
     </style>
 </head>
@@ -52,12 +64,26 @@
     <header>
         <h1>Chat App</h1>
     </header>
-    <form>
-        <input type="text" name="text" id="texting" placeholder="chat with your friends..." required>
-        <input type="submit" value="Send">
-    </form>
-    <ul>
-    </ul>
+    <div class="flex">
+        <form id="chat-form">
+            <input type="text" name="text" id="texting" placeholder="chat with your friends..." required>
+            <input type="submit" value="Send">
+        </form>
+        <form id="new-group">
+            <input type="text" name="group" placeholder="New Group" required>
+            <input type="submit" value="Create">
+        </form>
+    </div>
+    <h2>Available groups: </h2>
+    <ul class="flex" id="groups"></ul>
+    <div class="flex">
+        <div>
+            <h2>Groups: </h2>
+            <ul id="groups-joined"></ul>
+        </div>
+        <ul id="chat-ul">
+        </ul>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./chat.js"></script>
 </body>

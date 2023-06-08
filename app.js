@@ -8,10 +8,15 @@ const loginRouter = require('./routes/login');
 const sequelize = require('./utils/database');
 const chatRouter = require('./routes/chat');
 const signupRouter = require('./routes/signup');
+const groupRouter = require('./routes/group');
 
 const User = require('./models/signup');
 const Chat = require('./models/chat');
+const Group = require('./models/group');
+const groupMessage = require('./models/groupmessage');
 Chat.belongsTo(User);
+// groupMessage.belongsTo(Group);
+User.belongsToMany(Group,{through: groupMessage});
 
 const app = express();
 
@@ -23,6 +28,7 @@ app.use(cors({
 
 app.use(express.static(__dirname+'/public'));
 
+app.use(groupRouter);
 app.use(chatRouter);
 app.use(loginRouter);
 app.use(signupRouter);
