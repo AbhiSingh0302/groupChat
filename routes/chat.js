@@ -8,7 +8,7 @@ const middleware = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/chat/text/:username',middleware.authorization,chatController.userChat);
+router.post('/chat/text/:userid',middleware.authorization,chatController.userChat);
 router.get('/chat/all-chats',middleware.authorization,chatController.allChats);
 router.get('/chat/user',middleware.authorization,chatController.registeredUsers);
 router.get('/chat',(req,res)=>{

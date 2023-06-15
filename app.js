@@ -14,9 +14,13 @@ const User = require('./models/signup');
 const Chat = require('./models/chat');
 const Group = require('./models/group');
 const groupMessage = require('./models/groupmessage');
+const groupUser = require('./models/groupuser');
+
 Chat.belongsTo(User);
-// groupMessage.belongsTo(Group);
-User.belongsToMany(Group,{through: groupMessage});
+User.hasMany(groupMessage);
+Group.hasMany(groupMessage);
+Group.hasMany(groupUser);
+User.hasMany(groupUser);
 
 const app = express();
 

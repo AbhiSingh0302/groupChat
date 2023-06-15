@@ -3,136 +3,210 @@ const form = document.getElementById('chat-form');
 const group = document.getElementById('new-group');
 const text = document.getElementById('texting');
 const groupLi = document.getElementById('groups');
-const groupsJoined = document.getElementById('groups-joined');
-const chatUser = localStorage.getItem('user');
+const addOradmin = document.getElementById('addOradmin');
+const selectUser = document.getElementById('select-user');
+const selectGroup = document.getElementById('select-group');
+const addUser = document.getElementById('add-user');
+const adminUser = document.getElementById('admin-user');
+const groupChatBox = document.getElementById('chat-group');
+
+const chatUserId = localStorage.getItem('userId');
 let localChats = [];
-const getChats = (chats) => {   
-    for(let chat of chats){
+const getChats = (chats) => {
+    for (let chat of chats) {
         let li = document.createElement('li');
-        li.innerHTML = chat.username+" - "+chat.text;
+        li.innerHTML = chat.username + " - " + chat.text;
         ul.append(li);
     }
     getGroups();
-    joinedGroups();
+    getUsers();
 }
 
-window.addEventListener('DOMContentLoaded',() => {
+window.addEventListener('DOMContentLoaded', () => {
     try {
         localChats = JSON.parse(localStorage.getItem("chats"));
-    if(localChats){
-        // console.log(chat);
-        getChats(localChats);
-    }else{
+        if (localChats) {
+            getChats(localChats);
+        } else {
+            console.log('not available');
+        }
+    } catch (error) {
         console.log('not available');
     }
-} catch (error) {
-    console.log('not available');
-}
 })
 
-form.addEventListener('submit',async (e) => {
-    try {
-    e.preventDefault();
-    const latestChat = await axios.post('/chat/text/'+chatUser,form,{
-        headers:{
-            'Authorization': localStorage.getItem('authorization'),
-            'Content-Type': 'application/json'
-        }
-    })
-    text.value = "";
-    if(localChats.length == 10){
-        localChats.shift();
-    }
-    console.log(latestChat);
-    localChats.push(latestChat.data);
-    localStorage.setItem("chats",JSON.stringify(localChats));
-    let li = document.createElement('li');
-    li.innerHTML = latestChat.data.username+" - "+latestChat.data.text;
-    ul.append(li);
-} catch (error) {
-       console.log("Something went wrong"); 
-}
-    
-})
-
-group.addEventListener('submit',async (e) => {
+form.addEventListener('submit', async (e) => {
     try {
         e.preventDefault();
-    const createGroup = await axios.post('/group/create/',group,{
-        headers:{
-            'Authorization': localStorage.getItem('authorization'),
-            'Content-Type': 'application/json'
-        }
-    })
-    if(createGroup){
-        console.log("group: ",createGroup);
-        let li = document.createElement('li');
-        li.innerHTML = `<button id=${createGroup.data.id}> ${createGroup.data.group} </button>`;
-        groupLi.append(li);
-        document.getElementById(createGroup.data.id).addEventListener('click',() => {
-            joinGroup(createGroup.data.id);
+        const latestChat = await axios.post('/chat/text/' + chatUserId, form, {
+            headers: {
+                'Authorization': localStorage.getItem('authorization'),
+                'Content-Type': 'application/json'
+            }
         })
-    }else{
-        console.log("group not formed");
+        text.value = "";
+        if (localChats.length == 10) {
+            localChats.shift();
+        }
+        console.log(latestChat);
+        localChats.push(latestChat.data);
+        localStorage.setItem("chats", JSON.stringify(localChats));
+        let li = document.createElement('li');
+        li.innerHTML = latestChat.data.username + " - " + latestChat.data.text;
+        ul.append(li);
+    } catch (error) {
+        console.log("Something went wrong");
     }
-} catch (error) {
-        console.log(error);
-}
+
 })
 
-async function joinGroup(id){
+group.addEventListener('submit', async (e) => {
     try {
-    const userJoinGroup = await axios.post('/group/join/'+id,{'username': chatUser},{
-        headers:{
-            'Authorization': localStorage.getItem('authorization'),
-            'Content-Type': 'application/json'
-        }
-    })
-    if(userJoinGroup){
-        console.log(userJoinGroup.data);
-    }
-} catch (error) {
-    console.log(error.data); 
-}
-}
-
-async function getGroups(){
-    try {
-    const allGroups = await axios.get('/group/all',{
-        headers:{
-            'Authorization': localStorage.getItem('authorization')
-        }
-    })
-    // console.log('groups:',allGroups.data);
-    for(let grp of allGroups.data){
-        // console.log(grp);
-        let li = document.createElement('li');
-        li.innerHTML = `<button id=${grp.id}> ${grp.group} </button>`;
-        groupLi.append(li);
-        document.getElementById(grp.id).addEventListener('click',() => {
-            joinGroup(grp.id);
+        e.preventDefault();
+        const createGroup = await axios.post('/group/create/' + chatUserId, group, {
+            headers: {
+                'Authorization': localStorage.getItem('authorization'),
+                'Content-Type': 'application/json'
+            }
         })
+        if (createGroup) {
+            console.log("group: ", createGroup);
+            let li = document.createElement('li');
+            li.innerHTML = `<button id=${createGroup.data.id}> ${createGroup.data.group} </button>`;
+            groupLi.append(li);
+            // document.getElementById(createGroup.data.id).addEventListener('click',() => {
+            //     joinGroup(createGroup.data.id);
+            // })
+            group.children[0].value = "";
+        } else {
+            console.log("group not formed");
+        }
+    } catch (error) {
+        console.log(error);
     }
-} catch (error) {
-        
-}
-}
+})
 
-async function joinedGroups(){
+async function getGroups() {
     try {
-        const groupJoined = await axios.get('/group/joined/'+chatUser,{
-            headers:{
+        const allGroups = await axios.get('/group/all/' + chatUserId, {
+            headers: {
                 'Authorization': localStorage.getItem('authorization')
             }
         })
-        console.log('groupJoined: ',groupJoined);
-        for(let grp of groupJoined.data){
+        const getAllGroups = allGroups.data.allGroups;
+        const getAdminGroups = allGroups.data.groupsWithAdmin;
+        console.log("getAdminGroups: ",getAdminGroups);
+        for (let grp of getAllGroups) {
+            console.log("group are: ", grp);
             let li = document.createElement('li');
-            li.innerHTML = grp;
-            groupsJoined.append(li);
+            li.innerHTML = `<button id=${grp.id}> ${grp.group} </button>`;
+            groupLi.append(li);
+            document.getElementById(grp.id).addEventListener('click', () => {
+                groupChat(grp.id);
+            })
         }
-        
+        for (let grp of getAdminGroups) {
+            let opt = document.createElement('option');
+            opt.value = grp.group;
+            opt.innerHTML = grp.group;
+            selectGroup.append(opt);
+        }
     } catch (error) {
-        
+
     }
 }
+
+async function getUsers() {
+    try {
+        const allUsers = await axios.get('/chat/user', {
+            headers: {
+                'Authorization': localStorage.getItem('authorization')
+            }
+        })
+        // console.log("allusers :",allUsers.data);
+        let usersData = allUsers.data;
+        for (let user of usersData) {
+            let opt = document.createElement('option');
+            opt.value = user.username;
+            opt.innerHTML = user.username;
+            selectUser.append(opt);
+        }
+
+    } catch (error) {
+
+    }
+}
+let groupId = -1;
+async function groupChat(id) {
+    try {
+        groupId = id;
+        groupChatBox.style.display = 'block';
+        const grpChats = await axios.get('/group/groupchat/' + id, {
+            headers: {
+                'Authorization': localStorage.getItem('authorization')
+            }
+        })
+        const chatsFromGrp = grpChats.data;
+        console.log(grpChats);
+        const listItems = document.querySelectorAll('#chat-ul li');
+
+        listItems.forEach(listItem => {
+            listItem.parentNode.removeChild(listItem);
+        });
+
+        for (let chat of chatsFromGrp) {
+            let li = document.createElement('li');
+            li.innerHTML = chat.message;
+            ul.append(li);
+        }
+    } catch (error) {
+
+    }
+}
+
+groupChatBox.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let chat = document.querySelector('#chat-group input[type="text"]').value;
+    const sendGrpChat = await axios.post('/group/sendchat/' + chatUserId, { 'text': chat, 'groupid': groupId }, {
+        headers: {
+            'Authorization': localStorage.getItem('authorization'),
+            'Content-Type': 'application/json'
+        }
+    })
+    console.log(sendGrpChat.data);
+    let li = document.createElement('li');
+    li.innerHTML = sendGrpChat.data.message;
+    ul.append(li);
+})
+
+addUser.addEventListener('click', async () => {
+    if (selectUser.value != "" && selectGroup.value != "") {
+        const addUserToGroup = await axios.post('/group/adduser/' + selectUser.value, { group: selectGroup.value }, {
+            headers: {
+                'Authorization': localStorage.getItem('authorization'),
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(addUserToGroup);
+    } else {
+        console.log("Empty select");
+    }
+})
+
+adminUser.addEventListener('click', async () => {
+    try {
+        if (selectUser.value != "" && selectGroup.value != "") {
+            const addAdminToGroup = await axios.post('/group/adminuser/' + selectUser.value, { group: selectGroup.value }, {
+                headers: {
+                    'Authorization': localStorage.getItem('authorization'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(addAdminToGroup);
+        } else {
+            console.log("Empty select");
+        }
+    } catch (error) {
+        console.log("Some error: ", error);
+    }
+})

@@ -22,7 +22,7 @@ exports.login = async (req,res)=>{
                     res.status(200).json({
                         "message": "User successfully logged in",
                         "token": genWebTokens(user.id),
-                        "user": user.username
+                        "userId": user.id
                     })
                 }else{
                     throw new Error('user not found');

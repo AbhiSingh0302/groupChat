@@ -23,15 +23,13 @@
         }
         .flex{
             display: flex;
-            width: 70%;
-            margin: 0 auto;
             justify-content: space-between;
         }
         form{
             text-align: center;
             margin: 1rem;
         }
-        input{
+        input,select{
             font-size: 18px;
             padding: 5px;
         }
@@ -40,7 +38,7 @@
         }
         #chat-ul{
             width: 70%;
-            margin: 0 auto;
+            /* margin: 0 auto; */
             background-color: aliceblue;
             padding: 1rem;
             list-style: none;
@@ -55,8 +53,15 @@
         button{
             padding: 5px;
         }
+        button:focus{
+            background-color: rgb(0, 0, 0);
+            color: white;
+        }
         h2{
             text-align: center;
+        }
+        #chat-group{
+            display: none;
         }
     </style>
 </head>
@@ -70,18 +75,30 @@
             <input type="submit" value="Send">
         </form>
         <form id="new-group">
-            <input type="text" name="group" placeholder="New Group" required>
+            <input type="text" name="group" placeholder="New Group" required>   
             <input type="submit" value="Create">
         </form>
+        <form id="addOradmin">
+            <select id="select-user">
+                <option value=""> Select User </option>
+            </select>
+            <select id="select-group">
+                <option value=""> Select Group </option>
+            </select>
+            <input type="button" value="Add" id="add-user">
+            <input type="button" value="Admin" id="admin-user">
+        </form>
     </div>
-    <h2>Available groups: </h2>
-    <ul class="flex" id="groups"></ul>
     <div class="flex">
         <div>
             <h2>Groups: </h2>
-            <ul id="groups-joined"></ul>
+            <ul id="groups"></ul>
         </div>
         <ul id="chat-ul">
+            <form id="chat-group">
+                <input type="text" name="text" placeholder="chat inside group..." required>
+                <input type="submit" value="Send">
+            </form>
         </ul>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

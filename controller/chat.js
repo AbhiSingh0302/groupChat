@@ -16,11 +16,11 @@ exports.registeredUsers = async (req,res) => {
 
 exports.userChat = async (req,res) => {
     try {
-        console.log("body is: ",req.body.text);
+        console.log("body is: ",req.body);
         console.log("params",req.params);
         const user = await Signup.findOne({
             where:{
-                username: req.params.username
+                id: req.params.userid
             }
         })
         if(user){

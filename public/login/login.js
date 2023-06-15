@@ -11,7 +11,7 @@ form.addEventListener('submit',async (e) => {
     if(userData){
         console.log(userData.data);
         localStorage.setItem('authorization', userData.data.token);
-        localStorage.setItem('user', userData.data.user);
+        localStorage.setItem("userId",userData.data.userId);
         log.innerHTML = "Successfully Login";
         log.style.color = 'green';
         setTimeout(() => {
@@ -40,7 +40,7 @@ form.addEventListener('submit',async (e) => {
                 console.log(err);
             })
             window.location.replace('/chat')
-        }, 2000)
+        }, 1000)
     }else{
         log.innerHTML = "Not exist";
         log.style.color = 'red';
