@@ -1,16 +1,21 @@
 var socket = io();
 socket.on("connect", () => {
-    console.log("ehgb",socket.id);
+    console.log("connected on: ",socket.id);
   });
-const ul = document.getElementById('chat-ul');
-const form = document.getElementById('chat-form');
-const group = document.getElementById('new-group');
-const text = document.getElementById('texting');
-const groupLi = document.getElementById('groups');
-const addOradmin = document.getElementById('addOradmin');
-const selectUser = document.getElementById('select-user');
-const selectGroup = document.getElementById('select-group');
-const addUser = document.getElementById('add-user');
+  socket.on("receive-message",message => {
+    let li = document.createElement('li');
+        li.innerHTML = message;
+        ul.append(li);
+  })
+  const ul = document.getElementById('chat-ul');
+  const form = document.getElementById('chat-form');
+  const group = document.getElementById('new-group');
+  const text = document.getElementById('texting');
+  const groupLi = document.getElementById('groups');
+  const addOradmin = document.getElementById('addOradmin');
+  const selectUser = document.getElementById('select-user');
+  const selectGroup = document.getElementById('select-group');
+  const addUser = document.getElementById('add-user');
 const adminUser = document.getElementById('admin-user');
 const groupChatBox = document.getElementById('chat-group');
 
@@ -48,6 +53,7 @@ form.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json'
             }
         })
+        socket.emit("custom-event",text.value);
         text.value = "";
         if (localChats.length == 10) {
             localChats.shift();

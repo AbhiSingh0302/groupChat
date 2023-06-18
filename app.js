@@ -27,6 +27,10 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 io.on("connection",socket => {
     console.log(socket.id);
+    socket.on("custom-event",(a) => {
+        io.emit("receive-message",a);
+        console.log(a);
+    })
 })
 
 app.use(bodyParser.json());
@@ -36,12 +40,6 @@ app.use(cors({
 }))
 
 app.use(express.static(__dirname+'/public'));
-// app.get('/socket.io/socket.io.js', (req, res) => {
-//     res.setHeader('Content-Type', 'application/javascript');
-//     // Serve the Socket.IO script file
-//     res.sendFile('/socket.io.js');
-//   });
-  
 
 app.use(groupRouter);
 app.use(chatRouter);
