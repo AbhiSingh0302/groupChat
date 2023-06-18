@@ -1,3 +1,7 @@
+var socket = io();
+socket.on("connect", () => {
+    console.log("ehgb",socket.id);
+  });
 const ul = document.getElementById('chat-ul');
 const form = document.getElementById('chat-form');
 const group = document.getElementById('new-group');
