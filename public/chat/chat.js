@@ -104,6 +104,7 @@ socket.on("receive-message", (latestChat,id) => {
 form.addEventListener('submit', async (e) => {
     try {
         e.preventDefault();
+        console.log(document.querySelector("#chat-form input[type='file']").value)
         const latestChat = await axios.post('/chat/text/' + chatUserId, form, {
             headers: {
                 'Authorization': localStorage.getItem('authorization'),
