@@ -6,20 +6,33 @@ const groupUserDb = require('../models/groupuser');
 exports.createGroup = async (req,res) => {
     try {
         const groupName = req.body;
+        console.log(groupName);
         const id = req.params.userid;
-        const formGroup = await groupDb.create(groupName);
-        const groupCreator = await Signup.findOne({where:{id}});
-        if(groupCreator && formGroup){
-                const makeGroupUser = await groupUserDb.create({
-                    'groupId': formGroup.id,
-                    'signupId': groupCreator.id,
-                    'isAdmin': 1
-                })
-            res.status(201).json(formGroup);
-        }else{
+        const groupAlreadyExist = await groupDb.findOne({
+            where:{
+                'group': groupName.group
+            }
+        })
+        console.log(groupAlreadyExist)
+        if(groupAlreadyExist){
             res.status(401).json({
-                "message": 'not able to create'
+                "message": 'group name already exist'
             })
+        }else{
+            const formGroup = await groupDb.create(groupName);
+            const groupCreator = await Signup.findOne({where:{id}});
+            if(groupCreator && formGroup){
+                    const makeGroupUser = await groupUserDb.create({
+                        'groupId': formGroup.id,
+                        'signupId': groupCreator.id,
+                        'isAdmin': 1
+                    })
+                res.status(201).json(formGroup);
+            }else{
+                res.status(401).json({
+                    "message": 'not able to create'
+                })
+            }
         }
     } catch (error) {
         res.status(404).json({
@@ -71,12 +84,24 @@ exports.addUserToGroup = async (req,res) => {
                 username
             }
         })
-        if(findGroup && findUser){
-            const userAddToGrp = await groupUserDb.create({
-                'groupId': findGroup.id,
+        const userAlreadyPresent = await groupUserDb.findOne({
+            where:{
                 'signupId': findUser.id
+            }
+        })
+        if(!userAlreadyPresent){
+            if(findGroup && findUser){
+                const userAddToGrp = await groupUserDb.create({
+                    'groupId': findGroup.id,
+                    'signupId': findUser.id
+                })
+                res.status(201).json(userAddToGrp)
+            }
+        }else{
+            res.status(401).json({
+                "success": "false",
+                "message": "User already added to the group"
             })
-            res.status(201).json(userAddToGrp)
         }
     } catch (error) {
         res.status(404).json(error);
@@ -95,13 +120,24 @@ exports.addAdminToGroup = async (req,res) => {
                 username
             }
         })
-        if(findGroup && findUser){
-            const userAdminToGrp = await groupUserDb.create({
-                'groupId': findGroup.id,
-                'signupId': findUser.id,
-                'isAdmin': 1
-            })
-            res.status(201).json(userAdminToGrp);
+        const userAlreadyPresent = await groupUserDb.findOne({
+            where:{
+                'signupId': findUser.id
+            }
+        })
+        if(userAlreadyPresent){
+            await groupUserDb.update({'isAdmin': 1},{where: {
+                'signupId': findUser.id
+            }})
+        }else{
+            if(findGroup && findUser){
+                const userAdminToGrp = await groupUserDb.create({
+                    'groupId': findGroup.id,
+                    'signupId': findUser.id,
+                    'isAdmin': 1
+                })
+                res.status(201).json(userAdminToGrp);
+            }
         }
     } catch (error) {
         res.status(404).json(error);
@@ -133,7 +169,7 @@ exports.sendChatToGroup = async (req,res) => {
             }
         })
         const sendChat = await groupMessage.create({
-            'message': req.body.text,
+            'text': req.body.text,
             'signupId': req.params.userid,
             'groupId': req.body.groupid,
             'username': groupUser.username

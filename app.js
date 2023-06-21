@@ -43,7 +43,12 @@ io.on("connection",socket => {
         // console.log("messsage and id is: ",message,id);
         if(id === -1){
             io.emit("receive-message",message);
+        }else{
+            io.to(id).emit("receive-message",message);
         }
+    })
+    socket.on("join-room", room => {
+        socket.join(room);
     })
 })
 
