@@ -127,10 +127,16 @@ exports.sendChatToGroup = async (req,res) => {
     try {
         console.log(req.body);
         console.log(req.params);
+        const groupUser = await Signup.findOne({
+            where:{
+                id: req.params.userid
+            }
+        })
         const sendChat = await groupMessage.create({
             'message': req.body.text,
             'signupId': req.params.userid,
-            'groupId': req.body.groupid
+            'groupId': req.body.groupid,
+            'username': groupUser.username
         })
         res.status(201).json(sendChat);
     } catch (error) {

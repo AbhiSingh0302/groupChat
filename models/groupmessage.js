@@ -8,7 +8,11 @@ const groupmessage = sequelize.define(process.env.GROUPMESSAGE_TABLE, {
       autoIncrement: true,
       primaryKey: true
     },
-    message: {
+    username: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false
+    },
+    text: {
       type: Sequelize.DataTypes.STRING,
       defaultValue: "joined"
     }

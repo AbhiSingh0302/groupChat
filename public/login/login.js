@@ -12,6 +12,7 @@ form.addEventListener('submit',async (e) => {
         console.log(userData.data);
         localStorage.setItem('authorization', userData.data.token);
         localStorage.setItem("userId",userData.data.userId);
+        localStorage.setItem("username",userData.data.username);
         log.innerHTML = "Successfully Login";
         log.style.color = 'green';
         setTimeout(() => {
@@ -33,6 +34,9 @@ form.addEventListener('submit',async (e) => {
                 }
                 for(let i=len-10; i<=chats.length-1; i++){
                     chatArr.push(chats[i]);
+                }
+                if(localStorage.getItem("chats")){
+                    localStorage.removeItem("chats");
                 }
                 localStorage.setItem("chats",JSON.stringify(chatArr));
             })
