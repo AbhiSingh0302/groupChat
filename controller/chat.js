@@ -1,5 +1,27 @@
 const Signup = require('../models/signup');
 const Userschat = require('../models/chat');
+const AWS = require('aws-sdk')
+
+const s3upload = async (file) => {
+    try {
+    const BUCKET_NAME = process.env.BUCKET_NAME;
+        const IAM_USER_KEY = process.env.IAM_USER_KEY;
+        const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
+        let s3bucket = new AWS.S3({
+            accessKeyId: IAM_USER_KEY,
+            secretAccessKey: IAM_USER_SECRET,
+        })
+        var params = {
+            Bucket: BUCKET_NAME,
+            Key: `uploads/${file.originalname}`,
+            Body: file.buffer,
+            ACL: 'public-read'
+        }
+        return await s3bucket.upload(params).promise();
+    } catch (error) {
+        console.log("some error: ",error);
+    }
+}
 
 exports.registeredUsers = async (req,res) => {
     try {
@@ -18,6 +40,8 @@ exports.userChat = async (req,res) => {
     try {
         console.log("body is: ",req.body);
         console.log("params",req.params);
+        console.log(req.files);
+        const result = await s3upload(req.files[0]);
         const user = await Signup.findOne({
             where:{
                 id: req.params.userid
@@ -30,7 +54,7 @@ exports.userChat = async (req,res) => {
                 'signupId': user.id
             })
             if(chat){
-                res.status(201).json(chat)
+                res.status(201).json({chat,result})
             }else{
                 res.status(404).json({
                     'success': false

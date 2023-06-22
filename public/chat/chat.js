@@ -96,25 +96,39 @@ async function getUsers() {
 
 socket.on("receive-message", (latestChat,id) => {
     console.log(latestChat,id);
+    let latestChatText = latestChat.chat;
+    if(!latestChatText){
+        latestChatText = latestChat;
+    }
     let li = document.createElement("li");
-    li.innerHTML = latestChat.username+" - "+latestChat.text;
+    li.innerHTML = latestChatText.username+" - "+latestChatText.text;
+    if(latestChat.result){
+        li.innerHTML = li.innerHTML + `<a href=${latestChat.result.Location}> File </a>`;
+    }
     ul.append(li);
 });
 
 form.addEventListener('submit', async (e) => {
     try {
         e.preventDefault();
-        console.log(document.querySelector("#chat-form input[type='file']").value)
-        const latestChat = await axios.post('/chat/text/' + chatUserId, form, {
+        const text = document.querySelector('#chat-form input[type="text"]');
+        const files = document.querySelector("#chat-form input[type='file']");
+        const formData = new FormData();
+        formData.append("text",text.value);
+        for(let i=0; i<files.files.length; i++){
+            formData.append("files", (files.files[i]));
+        }
+        console.log(...formData);
+        const latestChat = await axios.post('/chat/text/' + chatUserId, formData, {
             headers: {
                 'Authorization': localStorage.getItem('authorization'),
-                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/json'
             }
         })
         if (localChats.length == 10) {
             localChats.shift();
         }
-        localChats.push(latestChat.data);
+        localChats.push(latestChat.data.chat);
         localStorage.setItem("chats", JSON.stringify(localChats));
         socket.emit("send-message", latestChat.data, groupId);
         text.value = "";
@@ -186,8 +200,8 @@ async function groupChat(id) {
 
 groupChatBox.addEventListener('submit', async (e) => {
     e.preventDefault();
-    let chat = document.querySelector('#chat-group input[type="text"]').value;
-    const sendGrpChat = await axios.post('/group/sendchat/' + chatUserId, { 'text': chat, 'groupid': groupId }, {
+    const text = document.querySelector('#chat-group input[type="text"]').value;
+    const sendGrpChat = await axios.post('/group/sendchat/' + chatUserId, { 'text': text, 'groupid': groupId }, {
         headers: {
             'Authorization': localStorage.getItem('authorization'),
             'Content-Type': 'application/json'
