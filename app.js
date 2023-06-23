@@ -59,7 +59,7 @@ app.use(signupRouter);
 app.use((req,res) => {
     res.sendFile(path.join(__dirname,'public/signup/signup.html'))
 })
-
+console.log("log for testing cron");
 sequelize.sync()
 .then(() => {
     http.listen(3000,() => {
