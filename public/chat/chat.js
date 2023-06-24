@@ -200,16 +200,27 @@ async function groupChat(id) {
 
 groupChatBox.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const text = document.querySelector('#chat-group input[type="text"]').value;
-    const sendGrpChat = await axios.post('/group/sendchat/' + chatUserId, { 'text': text, 'groupid': groupId }, {
+    // const text = document.querySelector('#chat-group input[type="text"]').value;
+
+    const text = document.querySelector('#chat-group input[type="text"]');
+        const files = document.querySelector("#chat-group input[type='file']");
+        const formData = new FormData();
+        formData.append("text",text.value);
+        formData.append("groupid",groupId);
+        for(let i=0; i<files.files.length; i++){
+            formData.append("files", (files.files[i]));
+        }
+        console.log(...formData);
+    const sendGrpChat = await axios.post('/group/sendchat/' + chatUserId, formData, {
         headers: {
             'Authorization': localStorage.getItem('authorization'),
-            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/json'
         }
     })
     console.log("sfd",sendGrpChat.data);
     socket.emit("send-message", sendGrpChat.data, groupId);
-    document.querySelector('#chat-group input[type="text"]').value = "";
+    text.value = "";
+    files.value = "";
     // let li = document.createElement('li');
     // li.innerHTML = sendGrpChat.data.username+" - "+sendGrpChat.data.message;
     // ul.append(li);

@@ -40,7 +40,7 @@ exports.userChat = async (req,res) => {
     try {
         console.log("body is: ",req.body);
         console.log("params",req.params);
-        console.log(req.files);
+        console.log(req.files[0]);
         const result = await s3upload(req.files[0]);
         const user = await Signup.findOne({
             where:{
