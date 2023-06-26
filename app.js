@@ -61,7 +61,7 @@ app.use((req,res) => {
     res.sendFile(path.join(__dirname,'public/signup/signup.html'))
 })
 console.log("log for testing cron");
-sequelize.sync()
+sequelize.sync({force:true})
 .then(() => {
     http.listen(3000,() => {
         console.log("server is running at port 3000...");
