@@ -10,6 +10,9 @@ const userChat = sequelize.define(process.env.CHAT_TABLE, {
     text: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false
+    },
+    file: {
+      type: Sequelize.DataTypes.STRING,
     }
  });
 

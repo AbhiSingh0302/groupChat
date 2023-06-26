@@ -22,6 +22,7 @@ const s3upload = async (file) => {
         return await s3bucket.upload(params).promise();
     } catch (error) {
         console.log("some error: ",error);
+        return {};
     }
 }
 
@@ -151,6 +152,10 @@ exports.addAdminToGroup = async (req,res) => {
             await groupUserDb.update({'isAdmin': 1},{where: {
                 'signupId': findUser.id
             }})
+            res.status(201).json({
+                "success": true,
+                "message": "User has been made admin"
+            });
         }else{
             if(findGroup && findUser){
                 const userAdminToGrp = await groupUserDb.create({
@@ -187,6 +192,13 @@ exports.sendChatToGroup = async (req,res) => {
         console.log(req.params);
         console.log(req.files[0]);
         const result = await s3upload(req.files[0]);
+        let file = result;
+        if(Object.keys(file).length != 0){
+            file = {
+                'Location': result.Location,
+                'key': result.key
+            }
+        }
         const groupUser = await Signup.findOne({
             where:{
                 id: req.params.userid
@@ -194,6 +206,7 @@ exports.sendChatToGroup = async (req,res) => {
         })
         const chat = await groupMessage.create({
             'text': req.body.text,
+            'file': JSON.stringify(file),
             'signupId': req.params.userid,
             'groupId': req.body.groupid,
             'username': groupUser.username

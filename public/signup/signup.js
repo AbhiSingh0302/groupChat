@@ -1,6 +1,5 @@
 const form = document.querySelector('form');
 const log = document.querySelector('h3');
-console.log('signup.js');
 form.addEventListener('submit',async (e) => {
     try {
     e.preventDefault();
@@ -14,6 +13,7 @@ form.addEventListener('submit',async (e) => {
         log.style.color = 'green';
         setTimeout(() => {
             log.innerHTML = "";
+            document.getElementById("login-page").click();
         }, 2000)
     }else{
         log.innerHTML = "User already registered";
@@ -23,6 +23,7 @@ form.addEventListener('submit',async (e) => {
         }, 2000)
     }
 } catch (error) {
+    console.log(error);
     log.innerHTML = "User already registered";
     log.style.color = 'red';
     setTimeout(() => {

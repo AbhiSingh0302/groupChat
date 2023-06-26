@@ -15,6 +15,9 @@ const groupmessage = sequelize.define(process.env.GROUPMESSAGE_TABLE, {
     text: {
       type: Sequelize.DataTypes.STRING,
       defaultValue: "joined"
+    },
+    file: {
+      type: Sequelize.DataTypes.STRING,
     }
  });
 

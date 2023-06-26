@@ -38,13 +38,14 @@
             list-style: none;
         }
         #chat-ul{
-            width: 70%;
-            /* margin: 0 auto; */
-            background-color: aliceblue;
-            padding: 1rem;
-            list-style: none;
             height: 20rem;
             overflow: auto;
+            list-style: none;
+            padding: 1rem;
+        }
+        #chat-div{
+            width: 70%;
+            background-color: aliceblue;
         }
         #chat-ul li{
             background-color: #b1f5f5;
@@ -54,15 +55,15 @@
         button{
             padding: 5px;
         }
-        button:focus{
-            background-color: rgb(0, 0, 0);
-            color: white;
-        }
         h2{
             text-align: center;
         }
         #chat-group{
             display: none;
+        }
+        li:hover{
+            color: #e32424;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -71,21 +72,16 @@
         <h1>Chat App</h1>
     </header>
     <div class="flex">
-        <form id="chat-form">
-            <input type="text" name="text" id="texting" placeholder="chat with your friends..." required>
-            <input type="file" name="file" style="background-color: antiquewhite;">
-            <input type="submit" value="Send">
-        </form>
         <form id="new-group">
             <input type="text" name="group" placeholder="New Group" required>   
             <input type="submit" value="Create">
         </form>
         <form id="addOradmin">
-            <select id="select-user">
-                <option value=""> Select User </option>
-            </select>
             <select id="select-group">
                 <option value=""> Select Group </option>
+            </select>
+            <select id="select-user">
+                <option value=""> Select User </option>
             </select>
             <input type="button" value="Add" id="add-user">
             <input type="button" value="Admin" id="admin-user">
@@ -94,15 +90,24 @@
     <div class="flex">
         <div>
             <h2>Groups: </h2>
-            <ul id="groups"></ul>
+            <ul id="groups">
+                
+            </ul>
         </div>
-        <ul id="chat-ul">
+        <div id="chat-div">
+            <ul id="chat-ul">
+            </ul>
             <form id="chat-group">
                 <input type="text" name="text" placeholder="chat inside group..." required>
                 <input type="file" name="file" style="background-color: antiquewhite;">
                 <input type="submit" value="Send">
             </form>
-        </ul>
+            <form id="chat-form">
+                <input type="text" name="text" id="texting" placeholder="chat with your friends..." required>
+                <input type="file" name="file" style="background-color: antiquewhite;">
+                <input type="submit" value="Send">
+            </form>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
