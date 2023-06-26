@@ -3,7 +3,6 @@ const Signup = require('../models/signup');
 
 exports.signupreq = async (req,res)=>{
     try {
-        console.log(req.body);
         const {username,email,phone,password} = req.body;
         if(req.body){
             const user = await Signup.create({username,email,phone,password});

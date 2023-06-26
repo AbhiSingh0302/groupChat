@@ -20,6 +20,7 @@ const s3upload = async (file) => {
         return await s3bucket.upload(params).promise();
     } catch (error) {
         console.log("some error: ",error);
+        return {};
     }
 }
 
@@ -38,10 +39,16 @@ exports.registeredUsers = async (req,res) => {
 
 exports.userChat = async (req,res) => {
     try {
-        console.log("body is: ",req.body);
-        console.log("params",req.params);
-        console.log(req.files);
+        console.log(req.files[0]);
         const result = await s3upload(req.files[0]);
+        console.log("result: ",result);
+        let file = result;
+        if(Object.keys(file).length != 0){
+            file = {
+                'Location': result.Location,
+                'key': result.key
+            }
+        }
         const user = await Signup.findOne({
             where:{
                 id: req.params.userid
@@ -50,6 +57,7 @@ exports.userChat = async (req,res) => {
         if(user){
             const chat = await Userschat.create({
                 'text': req.body.text,
+                'file': JSON.stringify(file),
                 'username': user.username,
                 'signupId': user.id
             })
@@ -67,7 +75,8 @@ exports.userChat = async (req,res) => {
         }
     } catch (error) {
         res.status(404).json({
-            'success': false
+            'success': false,
+            error
         })
     }
 }

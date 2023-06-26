@@ -2,6 +2,29 @@ const groupDb = require('../models/group');
 const Signup = require('../models/signup');
 const groupMessage = require('../models/groupmessage');
 const groupUserDb = require('../models/groupuser');
+const AWS = require('aws-sdk')
+
+const s3upload = async (file) => {
+    try {
+    const BUCKET_NAME = process.env.BUCKET_NAME;
+        const IAM_USER_KEY = process.env.IAM_USER_KEY;
+        const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
+        let s3bucket = new AWS.S3({
+            accessKeyId: IAM_USER_KEY,
+            secretAccessKey: IAM_USER_SECRET,
+        })
+        var params = {
+            Bucket: BUCKET_NAME,
+            Key: `uploads/${file.originalname}`,
+            Body: file.buffer,
+            ACL: 'public-read'
+        }
+        return await s3bucket.upload(params).promise();
+    } catch (error) {
+        console.log("some error: ",error);
+        return {};
+    }
+}
 
 exports.createGroup = async (req,res) => {
     try {
@@ -129,6 +152,10 @@ exports.addAdminToGroup = async (req,res) => {
             await groupUserDb.update({'isAdmin': 1},{where: {
                 'signupId': findUser.id
             }})
+            res.status(201).json({
+                "success": true,
+                "message": "User has been made admin"
+            });
         }else{
             if(findGroup && findUser){
                 const userAdminToGrp = await groupUserDb.create({
@@ -163,18 +190,28 @@ exports.sendChatToGroup = async (req,res) => {
     try {
         console.log(req.body);
         console.log(req.params);
+        console.log(req.files[0]);
+        const result = await s3upload(req.files[0]);
+        let file = result;
+        if(Object.keys(file).length != 0){
+            file = {
+                'Location': result.Location,
+                'key': result.key
+            }
+        }
         const groupUser = await Signup.findOne({
             where:{
                 id: req.params.userid
             }
         })
-        const sendChat = await groupMessage.create({
+        const chat = await groupMessage.create({
             'text': req.body.text,
+            'file': JSON.stringify(file),
             'signupId': req.params.userid,
             'groupId': req.body.groupid,
             'username': groupUser.username
         })
-        res.status(201).json(sendChat);
+        res.status(201).json({chat,result});
     } catch (error) {
         res.status(404).json(error);
     }
