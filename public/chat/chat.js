@@ -198,7 +198,7 @@ async function groupChat(e) {
         }
         console.log(groupId);
         groupChatBox.style.display = 'block';
-        group.style.display = "none";
+        form.style.display = "none";
         const grpChats = await axios.get('/group/groupchat/' + groupId, {
             headers: {
                 'Authorization': localStorage.getItem('authorization')
